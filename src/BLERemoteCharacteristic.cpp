@@ -471,7 +471,7 @@ std::string BLERemoteCharacteristic::readValue() {
  * @return N/A.
  */
 void BLERemoteCharacteristic::registerForNotify(
-		Notifier* objectToNotify) {
+		BLENotifier* objectToNotify) {
 	ESP_LOGD(LOG_TAG, ">> registerForNotify(): %s", toString().c_str());
 
 	toNotify = objectToNotify;   // Save the notification callback.

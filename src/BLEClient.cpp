@@ -113,7 +113,8 @@ bool BLEClient::connect(BLEAddress address) {
 	errRc = ::esp_ble_gattc_open(
 		getGattcIf(),
 		*getPeerAddress().getNative(), // address
-		1                              // direct connection
+		BLE_ADDR_TYPE_PUBLIC,          // Note: This was added on 2018-04-03 when the latest ESP-IDF was detected to have changed the signature.
+		1										           // direct connection
 	);
 	if (errRc != ESP_OK) {
 		ESP_LOGE(LOG_TAG, "esp_ble_gattc_open: rc=%d %s", errRc, GeneralUtils::errorToString(errRc));
