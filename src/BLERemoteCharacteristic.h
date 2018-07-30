@@ -21,7 +21,7 @@
 
 class BLENotifier {
 	public:
-		virtual void onNotify(BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify)=0;
+		virtual void onData(BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify)=0;
 };
 
 class BLERemoteService;
