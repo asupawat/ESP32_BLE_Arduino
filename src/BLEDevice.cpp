@@ -42,17 +42,11 @@ static const char* LOG_TAG = "BLEDevice";
  */
 BLEServer* BLEDevice::m_pServer = nullptr;
 BLEScan*   BLEDevice::m_pScan   = nullptr;
-<<<<<<< HEAD
 std::map<uint16_t, BLEClient*> BLEDevice::m_clients;
 std::map<esp_gatt_if_t, BLEClient*> BLEDevice::m_connectedClients;
 std::map<std::string, BLEClient*> BLEDevice::m_connectedClientsAddr;
 bool       initialized          = false;   // Have we been initialized?
 esp_ble_sec_act_t 	BLEDevice::m_securityLevel = (esp_ble_sec_act_t)0;
-=======
-BLEClient* BLEDevice::m_pClient = nullptr;
-bool       initialized          = false;  
-esp_ble_sec_act_t BLEDevice::m_securityLevel = (esp_ble_sec_act_t)0;
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
 BLESecurityCallbacks* BLEDevice::m_securityCallbacks = nullptr;
 uint16_t   BLEDevice::m_localMTU = 23;  // not sure if this variable is useful
 BLEAdvertising* BLEDevice::m_bleAdvertising = nullptr;
@@ -186,7 +180,6 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
 			break;
 		}
 		case ESP_GATTC_CONNECT_EVT: {
-<<<<<<< HEAD
 			BLEClient* temp = m_connectedClients[gattc_if];
 			BLEAddress address = BLEAddress(param->connect.remote_bda);
 			m_connectedClientsAddr[address.toString()] = temp;
@@ -197,8 +190,6 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
 					ESP_LOGE(LOG_TAG, "esp_ble_gattc_send_mtu_req: rc=%d %s", errRc, GeneralUtils::errorToString(errRc));
 				}
 			}
-=======
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
 #ifdef CONFIG_BLE_SMP_ENABLE   // Check that BLE SMP (security) is configured in make menuconfig
 			if(BLEDevice::m_securityLevel){
 				esp_ble_set_encryption(param->connect.remote_bda, BLEDevice::m_securityLevel);
@@ -217,16 +208,11 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
 		}
 	}
 
-<<<<<<< HEAD
 
 	// If we have a client registered, call it.
 	BLEClient* client = m_connectedClients[gattc_if];
-	client->gattClientEventHandler(event, gattc_if, param);
-=======
-	if(m_customGattcHandler != nullptr) {
-		m_customGattcHandler(event, gattc_if, param);
-	}
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
+	if (client->getClientEventHandler != nullptr)
+		client->gattClientEventHandler(event, gattc_if, param);
 
 
 } // gattClientEventHandler
@@ -318,7 +304,6 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
 		}
 	} // switch
 
-<<<<<<< HEAD
 	if (BLEDevice::m_pServer != nullptr) {
 		BLEDevice::m_pServer->handleGAPEvent(event, param);
 	}
@@ -330,10 +315,6 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
 
 		if (client != nullptr)
 			client->handleGAPEvent(event, param);
-=======
-	if (BLEDevice::m_pClient != nullptr) {
-		BLEDevice::m_pClient->handleGAPEvent(event, param);
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
 	}
 
 	if (BLEDevice::m_pScan != nullptr) {
@@ -387,11 +368,7 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
  */
 /* STATIC */ std::string BLEDevice::getValue(BLEAddress bdAddress, BLEUUID serviceUUID, BLEUUID characteristicUUID) {
 	ESP_LOGD(LOG_TAG, ">> getValue: bdAddress: %s, serviceUUID: %s, characteristicUUID: %s", bdAddress.toString().c_str(), serviceUUID.toString().c_str(), characteristicUUID.toString().c_str());
-<<<<<<< HEAD
 	BLEClient *pClient = createClient(DEFAULT_APP_ID);
-=======
-	BLEClient* pClient = createClient();
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
 	pClient->connect(bdAddress);
 	std::string ret = pClient->getValue(serviceUUID, characteristicUUID);
 	pClient->disconnect();
@@ -535,11 +512,7 @@ gatts_event_handler BLEDevice::m_customGattsHandler = nullptr;
  */
 /* STATIC */ void BLEDevice::setValue(BLEAddress bdAddress, BLEUUID serviceUUID, BLEUUID characteristicUUID, std::string value) {
 	ESP_LOGD(LOG_TAG, ">> setValue: bdAddress: %s, serviceUUID: %s, characteristicUUID: %s", bdAddress.toString().c_str(), serviceUUID.toString().c_str(), characteristicUUID.toString().c_str());
-<<<<<<< HEAD
 	BLEClient *pClient = createClient(DEFAULT_APP_ID);
-=======
-	BLEClient* pClient = createClient();
->>>>>>> 11a0aa645326aed0cb681e86060fe28d4623bc68
 	pClient->connect(bdAddress);
 	pClient->setValue(serviceUUID, characteristicUUID, value);
 	pClient->disconnect();
